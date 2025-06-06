@@ -67,7 +67,7 @@ class ResponseGenerator:
         elif intent == 'info_medicamento':
             # Verificar se há medicamentos mencionados
             medicamentos = entities.get('medicamentos', [])
-            if medicamentos:
+            if medicamentos:#
                 medicine_name = medicamentos[0]
                 
                 # Definir contexto para continuar falando sobre este medicamento

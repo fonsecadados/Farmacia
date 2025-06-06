@@ -3,7 +3,7 @@ import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from dotenv import load_dotenv
-from nlp_processor import NLPProcessor
+from src.nlp_processor import NLPProcessor
 
 # Configurar logging
 logging.basicConfig(

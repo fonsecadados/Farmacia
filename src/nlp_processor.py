@@ -38,7 +38,7 @@ class NLPProcessor:
         'disponibilidade': ['tem', 'disponível', 'disponivel', 'estoque', 'vocês têm', 'voces tem'],
         'horario': ['horário', 'horario', 'funcionamento', 'aberto', 'fechado', 'abre', 'fecha'],
         'localizacao': ['onde', 'endereço', 'endereco', 'localização', 'localizacao', 'como chegar'],
-        'ajuda': ['ajuda', 'help', 'socorro', 'não entendi', 'nao entendi', 'como funciona', 'o que você faz', 'o que voce faz'],
+        'ajuda': ['ajuda', 'help', 'socorro', 'não entendi', 'nao entendi', 'como funciona', 'o que você faz', 'o que voce faz', 'voltar'],
         'falar_humano': ['atendente', 'humano', 'pessoa', 'farmacêutico', 'farmaceutico', 'gerente', 'falar com alguém', 'falar com alguem']
     }
     

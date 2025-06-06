@@ -1,4 +1,4 @@
-from models import Conversation
+from models import Conversation, Product
 
 class ContextManager:
     """Gerenciador de contexto para fluxos de conversação"""
@@ -58,6 +58,8 @@ class ContextManager:
             if nlp_result['intent'] in ['despedida', 'ajuda']:
                 return None, ContextManager.CONTEXT_TYPES['NONE'], None
             
+            response = Product.find_by_name(medicine_name)
+
             # Aqui seria implementada a lógica para buscar informações do medicamento
             # Por enquanto, apenas simulamos uma resposta
             response = f"Aqui estão as informações sobre {medicine_name}:\n\n"
@@ -75,6 +77,7 @@ class ContextManager:
             
             # Se a intenção for de despedida ou ajuda, limpar o contexto
             if nlp_result['intent'] in ['despedida', 'ajuda']:
+                ContextManager.clear_context(user_id, platform)
                 return None, ContextManager.CONTEXT_TYPES['NONE'], None
             
             # Aqui seria implementada a lógica para verificar o estoque
