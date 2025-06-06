@@ -85,7 +85,7 @@ def initialize_sample_data():
             'category': 'Atendimento'
         }
     ]
-    
+    #
     for faq in faqs:
         FAQ.add_faq(
             question=faq['question'],

@@ -2,7 +2,7 @@ import os
 import logging
 from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
-from whatsapp_bot_no_db import webhook as whatsapp_webhook
+from src.whatsapp_bot_no_db import webhook as whatsapp_webhook
 from whatsapp_bot_no_db import verify_webhook as whatsapp_verify_webhook
 
 # Configurar logging
