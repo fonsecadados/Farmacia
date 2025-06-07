@@ -2,12 +2,52 @@ from nlp_processor import NLPProcessor
 from context_manager import ContextManager
 from models import Product, FAQ, Conversation
 
+instagram_link = "https://www.instagram.com/farmes.colina?igsh=dXMwMzAycm9keHlp"
+instagram_link_promos = "https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MTA1ODI0OTM1NTE2NTAw?story_media_id=3646291519857893134_3212031575&igsh=MW94YXR5c2F2dHlzbw=="
 MENU_OPTIONS = {
-    '1': "🏪 Nossa loja fica na Colina de Laranjeiras! Temos tudo para sua saúde.",
-    '2': "⏰ Funcionamos de segunda a sábado, das 8h às 20h.",
-    '3': "🔥 Promoções e disponibilidade em www.farmes.com/promocoes",
-    '4': "💬 Entendi, você está com sintomas. Me diga o que está sentindo.",
-    '5': "❓ Perguntas frequentes: https://farmes.com/faq",
+    '1':( f"🏪 Nossa loja fica em Colina de Laranjeiras, n° 123 - Serra - ES\n\n"
+          f"💟 Aqui nós cuidamos de você! 💟\n"
+          f"✔️ Funcionamos de Segunda à Sábado de 08h às 22h 🕜\n\n"
+          f"📍 Tudo em perfumeria e medicamentos com precinho que cabe no seu bolso! 💲\n\n"
+          f"Contamos com vagas de estacionamento para PCD, além de atendimento parsonalizado!\n\n"
+          f"\n"
+          f"Visite nossa página no Instagram e fique por dentro das melhores promoções do mercado!"
+          f"\n\n"
+          f"{instagram_link}\n\n"
+          f"Digite 1️⃣ para voltar ao Menu principal\n"
+          f"Digite 2️⃣ para ver PROMOÇÔES\n"
+         ),
+    '2':( f"Bem vindo(a) ao cadastro na REDE Farmes!\n\n"
+          f"⚠️ Atenção ⚠️\n"
+          f"Para continuar com o cadastro é preciso que você aceite a nossa POLÍTICA DE PRIVACIDADE, conforme orientedo pela Lei Geral de Proteção aos Dados (LGPD)\n\n"
+          f"Acesse:\n"
+          f"https:/www.redefarmes.com.br/institucional/politica-de-privacidade\n\n\n"
+          f"Digite a opção escolhida:\n\n"
+          f"1️⃣ Aceito os termos\n"
+          f"2️⃣ Não aceito os termos"
+          ),
+    '3': (f"🔥 Fique por dentro das PROMOÇÔES da semana na nossa página!\n\n"
+          f"{instagram_link_promos}\n\n"
+          ),
+    '4': "💬 Entendi, você está apresentando alguns sintomas. Me diga o que está sentindo para poder te ajudar",
+    '5': (f"Algumas perguntas Frequentes no nosso canal:\n\n"
+          f"Digite o N° para receber resposta:\n\n"
+          f"1️⃣ Qual o horário de funcionamento da farmácia?\n\n"
+          f"2️⃣ Quais formas de pagamento são aceitas?\n\n"
+          f"3️⃣ Vocês fazem entrega?\n\n"
+          f"4️⃣ Preciso de receita para comprar antibióticos?\n\n"
+          f"5️⃣ Vocês aceitam receitas digitais?\n\n"
+          f"6️⃣ Vocês aplicam vacinas na farmácia?\n\n"
+          f"7️⃣ Vocês medem pressão arterial e glicose?\n\n"
+          f"8️⃣ É possível fazer cadastro para receber promoções?\n\n"
+          f"9️⃣ Vocês vendem medicamentos manipulados?\n\n"
+          f"1️⃣0️⃣ Posso trocar um produto comprado na farmácia?\n\n"
+          f"1️⃣1️⃣ Como funciona o programa de fidelidade da farmácia?\n\n"
+          f"1️⃣2️⃣ Vocês possuem estacionamento para clientes?\n\n"
+          f"1️⃣3️⃣ Tem desconto para convênios ou planos de saúde?\n\n"
+          f"1️⃣4️⃣ Quais são os canais de atendimento da farmácia?\n\n\n"
+          f"Digite 0️⃣ para retornar ao menu principal."  
+          ),
     '6': "🔔 Outras opções: falar com atendente, localização no mapa etc."
 }
 

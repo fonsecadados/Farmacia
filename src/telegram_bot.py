@@ -38,17 +38,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     except Exception as e:
         logger.error(f"Erro ao registrar usuário: {e}")
     
-    # Mensagem de boas-vindas 📍💉💊💟
+    # Mensagem de boas-vindas 
+    num_loja = 27999999999
     welcome_message = (
-        f"👋 Olá, {user.first_name}! 👋\n"
-        "📍 Bem-vindo(a) ao Atendimento Virtual📍\n🔹 Rede FARMES - Colina de Laranjeiras 🔹\n 🔝 Estamos aqui para otimizar o seu atendimento 🔝\n\n\n"
-        "Digite o número da opção:\n\n"
-        "1️⃣ Conheça nossa loja! 🏥\n\n"
-        "2️⃣ Horários de Funcionamento 🕜\n\n"
-        "3️⃣ Ver PROMOÇÕES e Disponibilidade 💯\n\n"
-        "4️⃣ Estou com sintomas, preciso de recomendação para medicamentos 💊\n\n"
+        f"👋 Olá, {user.first_name}! 👋\n\n"
+        "📍 Bem-vindo(a) ao Atendimento Virtual📍\n🔹 Rede FARMES - Colina de Laranjeiras 🔹\n\n" 
+        "Nosso atendimento é HUMANIZADO e estamos aqui para otimizar o seu tempo, por isso escreva o medicamento ou o produto você procura para consultar disponibilidade\n\n\n "
+        "OU digite o número da opção:\n\n"
+        "1️⃣ Conheça nossa loja e os horários de funcionamento 🏥\n\n"
+        "2️⃣ Fazer cadastro na loja 🕜\n\n"
+        "3️⃣ Fique por dentro das PROMOÇÔES 💯\n\n"
+        "4️⃣ Tenho sintomas, preciso de recomendações 💊\n\n"
         "5️⃣ Perguntas Frequentes ❔\n\n"
-        "6️⃣ Outras opções 	📢\n\n\n"
+        "6️⃣ Sugestões/Reclamações 	📢\n\n\n"
+        f"Esse é um canal de atendimento automatizado, para falar com vendedor ligue para nossa loja:\n\n"
+        f"{num_loja}\n\n"
         "💟 Como podemos te ajudar hoje? 💟"
     )
     
