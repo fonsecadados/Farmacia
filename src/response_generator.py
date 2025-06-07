@@ -2,46 +2,74 @@ from nlp_processor import NLPProcessor
 from context_manager import ContextManager
 from models import Product, FAQ, Conversation
 
+MENU_OPTIONS = {
+    '1': "🏪 Nossa loja fica na Colina de Laranjeiras! Temos tudo para sua saúde.",
+    '2': "⏰ Funcionamos de segunda a sábado, das 8h às 20h.",
+    '3': "🔥 Promoções e disponibilidade em www.farmes.com/promocoes",
+    '4': "💬 Entendi, você está com sintomas. Me diga o que está sentindo.",
+    '5': "❓ Perguntas frequentes: https://farmes.com/faq",
+    '6': "🔔 Outras opções: falar com atendente, localização no mapa etc."
+}
+
+
 class ResponseGenerator:
     """Gerador de respostas para o bot de farmácia"""
-    
+        
     @staticmethod
     def generate_response(user_id, platform, message_text):
         """Gera uma resposta com base na mensagem do usuário e no contexto"""
+
         # Salvar a mensagem do usuário
         Conversation.save_message(user_id, platform, message_text, is_from_user=True)
-        
+
+        # Verificar se o usuário digitou uma opção numérica do menu
+        opcao = message_text.strip()
+        if opcao in MENU_OPTIONS:
+            resposta_menu = MENU_OPTIONS[opcao]
+
+            # Se a opção for 4, iniciar contexto de sintomas
+            if opcao == '4':
+                ContextManager.set_context(
+                    user_id,
+                    platform,
+                    ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'],
+                    {}
+                )
+
+            Conversation.save_message(user_id, platform, resposta_menu, is_from_user=False)
+            return resposta_menu
+
         # Analisar o texto com NLP
         nlp_result = NLPProcessor.analyze_text(message_text)
-        
+
         # Verificar se há um contexto ativo e processar a mensagem nesse contexto
         context_response = ContextManager.process_in_context(user_id, platform, message_text, nlp_result)
-        
+
         if context_response and context_response[0]:
             response, new_context_type, new_context_data = context_response
-            
+
             # Atualizar o contexto se necessário
             if new_context_type:
                 ContextManager.set_context(user_id, platform, new_context_type, new_context_data)
             elif new_context_type == ContextManager.CONTEXT_TYPES['NONE']:
                 ContextManager.clear_context(user_id, platform)
-            
+
             # Salvar a resposta do bot
             Conversation.save_message(user_id, platform, response, is_from_user=False)
             return response
-        
+
         # Se não houver contexto ativo ou o contexto não gerou resposta,
         # processar a mensagem normalmente com base na intenção
         intent = nlp_result['intent']
         entities = nlp_result['entities']
-        
+
         # Gerar resposta com base na intenção
         response = ResponseGenerator._generate_response_by_intent(intent, entities, user_id, platform)
-        
+
         # Salvar a resposta do bot
         Conversation.save_message(user_id, platform, response, is_from_user=False)
         return response
-    
+
     @staticmethod
     def _generate_response_by_intent(intent, entities, user_id, platform):
         """Gera uma resposta com base na intenção identificada"""

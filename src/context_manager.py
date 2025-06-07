@@ -39,19 +39,22 @@ class ContextManager:
     @staticmethod
     def clear_context(user_id, platform):
         Conversation.clear_context(user_id, platform)
-    
+        
     @staticmethod
-    def detectar_sintoma_spacy(texto_usuario, known_symptoms):
+    def detectar_sintomas_spacy(texto_usuario, known_symptoms):
         doc = nlp(texto_usuario.lower())
         texto_processado = " ".join([token.lemma_ for token in doc])
 
+        sintomas_detectados = set()
+
         for sintoma, info in known_symptoms.items():
             if sintoma in texto_processado:
-                return sintoma
+                sintomas_detectados.add(sintoma)
             for sinonimo in info.get("sinonimos", []):
                 if sinonimo in texto_processado:
-                    return sintoma
-        return None
+                    sintomas_detectados.add(sintoma)
+
+        return list(sintomas_detectados) if sintomas_detectados else None
 
     @staticmethod
     def process_in_context(user_id, platform, message_text, nlp_result):
@@ -129,16 +132,28 @@ class ContextManager:
                 medications = known_symptoms[matched_symptom]['medicamentos']
                 response = f"Para sintomas como '{matched_symptom}', posso recomendar:\n\n"
 
-                for i, med_name in enumerate(medications, 1):
+                for i, med_name in enumerate(medications, 1):#
                     product = Product.get_product_by_name(med_name)
                     if product:
-                        description = product.get('description', 'Sem descrição disponível.')
+                        description = product.get('description','Sem descrição disponível.')
+                        manufacturer = product.get('manufacturer')
+                        price = product.get('price')
+                        administration = product.get('administration_route')
                     else:
                         description = 'Medicamento não encontrado no banco de dados.'
+                        category = 'Categoria desconhecida'
+                        manufacturer = 'Fabricante desconhecido'
+                        price = 'N/A'
+                        administration = 'Via não informada'
 
-                    response += f"{i}. {med_name.upper()}  –  {description}\n\n"
+                    response += (
+                                f"{i}. {med_name.upper()} - {description}\n"
+                                f"Administração: {administration}\n"
+                                f"Fabricante: {manufacturer}\n"
+                                f"Preço: R${price}\n\n🔸\n\n"
+                    )
 
-                response += "\nLembre-se que esta é apenas uma sugestão inicial. Para um diagnóstico preciso, consulte um médico ou farmacêutico."
+                response += "\nLembre-se que esta é apenas uma sugestão inicial. Gostaria de seguir o atendimento, digite o número do medicamento."
 
                 return response, ContextManager.CONTEXT_TYPES['NONE'], None
 

@@ -20,7 +20,7 @@ class User:
         """Cria ou atualiza um usuário no banco de dados"""
         user_data = {
             'user_id': user_id,
-            'platform': platform,  # 'telegram' ou 'whatsapp'
+            'platform': platform,  # 'telegram' ou 'whatsapp'#
             'first_name': first_name,
             'last_name': last_name,
             'username': username,
@@ -110,7 +110,7 @@ class Product:
     """Modelo para produtos/medicamentos"""
     
     @staticmethod
-    def add_product(name, description, price, stock, category, prescription_required=False):
+    def add_product(name, description, price, stock, category, manufacturer, dosage_form, administration_route, prescription_required=False):
         """Adiciona um novo produto ao catálogo"""
         product = {
             'name': name,
@@ -119,6 +119,9 @@ class Product:
             'stock': stock,
             'category': category,
             'prescription_required': prescription_required,
+            'manufacturer': manufacturer,
+            'dosage_form' : dosage_form,
+            'administration_route' : administration_route,
             'created_at': datetime.now(),
             'updated_at': datetime.now()
         }

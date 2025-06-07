@@ -38,16 +38,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     except Exception as e:
         logger.error(f"Erro ao registrar usuário: {e}")
     
-    # Mensagem de boas-vindas
+    # Mensagem de boas-vindas 📍💉💊💟
     welcome_message = (
-        f"Olá, {user.first_name}! 👋\n\n"
-        "Bem-vindo(a) ao Atendimento Virtual Farmácia Saúde! Estou aqui para ajudar você com:\n\n"
-        "• Informações sobre medicamentos\n"
-        "• Verificação de disponibilidade de produtos\n"
-        "• Horários de funcionamento\n"
-        "• Localização da farmácia\n"
-        "• Recomendações para sintomas\n\n"
-        "Como posso te ajudar hoje?"
+        f"👋 Olá, {user.first_name}! 👋\n"
+        "📍 Bem-vindo(a) ao Atendimento Virtual📍\n🔹 Rede FARMES - Colina de Laranjeiras 🔹\n 🔝 Estamos aqui para otimizar o seu atendimento 🔝\n\n\n"
+        "Digite o número da opção:\n\n"
+        "1️⃣ Conheça nossa loja! 🏥\n\n"
+        "2️⃣ Horários de Funcionamento 🕜\n\n"
+        "3️⃣ Ver PROMOÇÕES e Disponibilidade 💯\n\n"
+        "4️⃣ Estou com sintomas, preciso de recomendação para medicamentos 💊\n\n"
+        "5️⃣ Perguntas Frequentes ❔\n\n"
+        "6️⃣ Outras opções 	📢\n\n\n"
+        "💟 Como podemos te ajudar hoje? 💟"
     )
     
     await update.message.reply_text(welcome_message)
@@ -64,7 +66,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "Você também pode simplesmente enviar mensagens normais para perguntar sobre medicamentos, "
         "verificar disponibilidade de produtos ou descrever sintomas."
     )
-    
+    #
     await update.message.reply_text(help_message)
 
 async def horario_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
