@@ -125,7 +125,7 @@ class Product:
         products.insert_one(product)
     
     @staticmethod
-    def search_products(query, limit=5):
+    def search_products(query, limit=5):    
         """Busca produtos pelo nome ou descrição"""
         return list(products.find({
             '$or': [
@@ -136,9 +136,13 @@ class Product:
     
     @staticmethod
     def get_product_by_name(name):
-        """Obtém um produto pelo nome exato"""
-        return products.find_one({'name': name})
-
+        """Obtém um produto pelo nome exato (insensível a maiúsculas/minúsculas)"""
+        return products.find_one({
+            'name': {
+                '$regex': f'^{name}$',
+                '$options': 'i'
+            }
+        })
 
 class FAQ:
     """Modelo para perguntas frequentes"""

@@ -1,0 +1,62 @@
+{
+  "dor de cabeça": {
+    "sinonimos": ["cefaleia", "cabeça doendo", "enxaqueca", "dor na cabeça", "cabeça latejando"],
+    "categoria": "neurológico",
+    "gravidade": "leve",
+    "medicamentos": ["Dipirona", "Paracetamol", "Ibuprofeno"]
+  },
+  "febre": {
+    "sinonimos": ["calafrio", "temperatura alta", "febril", "febre alta", "febre persistente"],
+    "categoria": "infeccioso",
+    "gravidade": "moderada",
+    "medicamentos": ["Dipirona", "Paracetamol"]
+  },
+  "tosse": {
+    "sinonimos": ["tossindo", "tosse seca", "tosse com catarro", "tosse persistente"],
+    "categoria": "respiratório",
+    "gravidade": "moderada",
+    "medicamentos": ["Bromexina", "Clobutinol"]
+  },
+  "dor muscular": {
+    "sinonimos": ["músculos doloridos", "dor nos músculos", "dores musculares", "mialgia"],
+    "categoria": "muscular",
+    "gravidade": "leve",
+    "medicamentos": ["Ibuprofeno", "Dorflex"]
+  },
+  "náusea": {
+    "sinonimos": ["enjoo", "vontade de vomitar", "náuseas", "náusea persistente"],
+    "categoria": "digestivo",
+    "gravidade": "leve",
+    "medicamentos": ["Dramin", "Plasil"]
+  },
+  "gripe": {
+    "sinonimos": ["resfriado", "influenza", "estado gripal", "síndrome gripal"],
+    "categoria": "infeccioso",
+    "gravidade": "moderada",
+    "medicamentos": ["Antigripal", "Paracetamol"]
+  },
+  "congestão nasal": {
+    "sinonimos": ["nariz entupido", "nariz congestionado", "coriza", "nariz escorrendo"],
+    "categoria": "respiratório",
+    "gravidade": "leve",
+    "medicamentos": ["Descongex", "Sorine"]
+  },
+  "dor de garganta": {
+    "sinonimos": ["garganta inflamada", "garganta dolorida", "dor na garganta", "faringite"],
+    "categoria": "respiratório",
+    "gravidade": "leve",
+    "medicamentos": ["Benalet", "Melhorex"]
+  },
+  "vômito": {
+    "sinonimos": ["enjoo com vômito", "vomitar", "náusea intensa", "expelir conteúdo estomacal"],
+    "categoria": "digestivo",
+    "gravidade": "moderada",
+    "medicamentos": ["Dramin", "Plasil"]
+  },
+  "diarreia": {
+    "sinonimos": ["fezes líquidas", "evacuações frequentes", "intestino solto"],
+    "categoria": "digestivo",
+    "gravidade": "leve",
+    "medicamentos": ["Imosec", "Floratil"]
+  }
+}

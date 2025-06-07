@@ -41,7 +41,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # Mensagem de boas-vindas
     welcome_message = (
         f"Olá, {user.first_name}! 👋\n\n"
-        "Bem-vindo(a) ao Bot da Farmácia Virtual. Estou aqui para ajudar você com:\n\n"
+        "Bem-vindo(a) ao Atendimento Virtual Farmácia Saúde! Estou aqui para ajudar você com:\n\n"
         "• Informações sobre medicamentos\n"
         "• Verificação de disponibilidade de produtos\n"
         "• Horários de funcionamento\n"

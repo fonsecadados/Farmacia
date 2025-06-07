@@ -45,7 +45,7 @@ class NLPProcessor:
     # Entidades comuns em farmácias
     ENTITIES = {
         'medicamentos': ['dipirona', 'paracetamol', 'ibuprofeno', 'amoxicilina', 'omeprazol', 'losartana', 'atenolol', 'rivotril', 'neosaldina', 'dorflex'],
-        'sintomas': ['dor', 'febre', 'tosse', 'gripe', 'resfriado', 'alergia', 'coceira', 'náusea', 'nausea', 'vômito', 'vomito', 'diarreia'],
+        'sintomas': ['dor', 'febre', 'tosse', 'gripe', 'resfriado', 'alergia', 'coceira', 'náusea', 'nausea', 'vômito', 'vomito', 'diarreia', 'sentindo', 'corte'],
         'categorias': ['antibiótico', 'antibiotico', 'analgésico', 'analgesico', 'anti-inflamatório', 'anti-inflamatorio', 'antialérgico', 'antialergico', 'vitamina']
     }
     
