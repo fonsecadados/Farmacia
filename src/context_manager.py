@@ -20,7 +20,8 @@ class ContextManager:
         'WAITING_SYMPTOM': 'waiting_symptom',
         'CONFIRMING_ORDER': 'confirming_order',
         'HUMAN': 'human',
-        'MAIN_MENU': 'main_menu'
+        'MAIN_MENU': 'main_menu',
+        'FAQ' : 'faq'
     }
     
     @staticmethod
@@ -41,7 +42,7 @@ class ContextManager:
         Conversation.clear_context(user_id, platform)
         
     @staticmethod
-    def detectar_sintomas_spacy(texto_usuario, known_symptoms):
+    def detectar_sintoma_spacy(texto_usuario, known_symptoms):
         doc = nlp(texto_usuario.lower())
         texto_processado = " ".join([token.lemma_ for token in doc])
 
@@ -50,9 +51,9 @@ class ContextManager:
         for sintoma, info in known_symptoms.items():
             if sintoma in texto_processado:
                 sintomas_detectados.add(sintoma)
-            for sinonimo in info.get("sinonimos", []):
-                if sinonimo in texto_processado:
-                    sintomas_detectados.add(sintoma)
+                for sinonimo in info.get("sinonimos", []):
+                    if sinonimo in texto_processado:
+                        sintomas_detectados.add(sintoma)
 
         return list(sintomas_detectados) if sintomas_detectados else None
 
@@ -129,41 +130,89 @@ class ContextManager:
             matched_symptom = ContextManager.detectar_sintoma_spacy(symptom, known_symptoms)
 
             if matched_symptom:
-                medications = known_symptoms[matched_symptom]['medicamentos']
-                response = f"Para sintomas como '{matched_symptom}', posso recomendar:\n\n"
+                response = ""
+                for sintoma in matched_symptom:
+                    medicamentos = known_symptoms.get(sintoma, {}).get('medicamentos', [])
 
-                for i, med_name in enumerate(medications, 1):#
-                    product = Product.get_product_by_name(med_name)
-                    if product:
-                        description = product.get('description','Sem descrição disponível.')
-                        manufacturer = product.get('manufacturer')
-                        price = product.get('price')
-                        administration = product.get('administration_route')
-                    else:
-                        description = 'Medicamento não encontrado no banco de dados.'
-                        category = 'Categoria desconhecida'
-                        manufacturer = 'Fabricante desconhecido'
-                        price = 'N/A'
-                        administration = 'Via não informada'
+                    if not medicamentos:
+                        response += f"⚠️ Nenhum medicamento sugerido para o sintoma: *{sintoma}*\n\n"
+                        continue
 
-                    response += (
-                                f"{i}. {med_name.upper()} - {description}\n"
-                                f"Administração: {administration}\n"
-                                f"Fabricante: {manufacturer}\n"
-                                f"Preço: R${price}\n\n🔸\n\n"
-                    )
+                    response += f" Para o sintoma {sintoma}, posso sugerir:\n\n"
 
-                response += "\nLembre-se que esta é apenas uma sugestão inicial. Gostaria de seguir o atendimento, digite o número do medicamento."
+                    for i, med_name in enumerate(medicamentos, 1):
+                        product = Product.get_product_by_name(med_name)
+                        if product:
+                            description = product.get('description', 'Sem descrição disponível.')
+                            manufacturer = product.get('manufacturer', 'Desconhecido')
+                            price = product.get('price', 'N/A')
+                            administration = product.get('administration_route', 'Via não informada')
+                        else:
+                            description = 'Medicamento não encontrado no banco de dados.'
+                            manufacturer = 'Desconhecido'
+                            price = 'N/A'
+                            administration = 'Via não informada'
+
+                        response += (
+                            f"🔹\n\n"
+                            f"{i}. {med_name.upper()} - {description}\n\n"
+                        )
+
+                    response += "────────────\n\n"
+
+                response += (
+                    "⚠️ ATENÇÃO ⚠️\n\n"
+                    "Não indicamos a automedicação.\n"
+                    "Para Dosagem e valores, favor falar com um de nossos atendentes\n\n"
+                    "Digite 1️⃣ para ser redirecionado\n"
+                    "Digite 0️⃣ para ser redirecionado\n"
+                )
 
                 return response, ContextManager.CONTEXT_TYPES['NONE'], None
+
 
             else:
                 response = (
                     "Desculpe, não entendi. Por favor, escreva um **SINTOMA** válido.\n"
                     "Exemplos: *dor de cabeça*, *febre*, *tosse*, *náusea*..."
                 )
-                return response, context_type, context_data
-        
+                return response, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], context_data
+            
+        elif context_type == ContextManager.CONTEXT_TYPES['FAQ']:
+            from models import FAQ  # coloque no topo do arquivo se preferir
+            numero = message_text.strip()
+
+            if numero == "0":
+                return (
+                    "Você voltou ao menu principal. Como posso te ajudar hoje?",
+                    ContextManager.CONTEXT_TYPES['MAIN_MENU'],
+                    {}
+                )
+
+            all_faqs = FAQ.get_all()  # Retorna todas as FAQs em ordem
+
+            try:
+                idx = int(numero) - 1
+                if 0 <= idx < len(all_faqs):
+                    faq = all_faqs[idx]
+                    return (
+                        f"❓ *{faq['question']}*\n\n💬 {faq['answer']}",
+                        ContextManager.CONTEXT_TYPES['FAQ'],
+                        context_data
+                    )
+                else:
+                    return (
+                        "❌ Opção inválida. Por favor, digite um número válido ou 0️⃣ para voltar ao menu principal.",
+                        ContextManager.CONTEXT_TYPES['FAQ'],
+                        context_data
+                    )
+            except ValueError:
+                return (
+                    "⚠️ Digite apenas o número da pergunta desejada ou 0️⃣ para retornar.",
+                    ContextManager.CONTEXT_TYPES['FAQ'],
+                    context_data
+                )
+
         # Redirecionamentos gerais, talvez colocar fora do if context_type
         if message_text.strip().lower() == "sim":
             whatsapp_link = "https://wa.me/5527995239355?text=Olá,%20preciso%20de%20ajuda%20com%20meus%20sintomas"

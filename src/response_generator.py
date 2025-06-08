@@ -1,6 +1,10 @@
 from nlp_processor import NLPProcessor
 from context_manager import ContextManager
 from models import Product, FAQ, Conversation
+import json
+
+with open(r'C:\Users\syafo\VIX_Intelligence\Farmacia\json\sintomas_med.json', 'r', encoding='utf-8') as f:
+    known_symptoms = json.load(f)
 
 instagram_link = "https://www.instagram.com/farmes.colina?igsh=dXMwMzAycm9keHlp"
 instagram_link_promos = "https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MTA1ODI0OTM1NTE2NTAw?story_media_id=3646291519857893134_3212031575&igsh=MW94YXR5c2F2dHlzbw=="
@@ -29,7 +33,8 @@ MENU_OPTIONS = {
     '3': (f"🔥 Fique por dentro das PROMOÇÔES da semana na nossa página!\n\n"
           f"{instagram_link_promos}\n\n"
           ),
-    '4': "💬 Entendi, você está apresentando alguns sintomas. Me diga o que está sentindo para poder te ajudar",
+    '4': "💬 Entandemos que você está apresentando alguns sintomas.\n\n Fale mais sobre eles para que possamos sugerir uma medicação\n\n"
+         "Digite 0️⃣ para voltar ao menu principal",
     '5': (f"Algumas perguntas Frequentes no nosso canal:\n\n"
           f"Digite o N° para receber resposta:\n\n"
           f"1️⃣ Qual o horário de funcionamento da farmácia?\n\n"
@@ -54,7 +59,7 @@ MENU_OPTIONS = {
 
 class ResponseGenerator:
     """Gerador de respostas para o bot de farmácia"""
-        
+            
     @staticmethod
     def generate_response(user_id, platform, message_text):
         """Gera uma resposta com base na mensagem do usuário e no contexto"""
@@ -73,6 +78,13 @@ class ResponseGenerator:
                     user_id,
                     platform,
                     ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'],
+                    {}
+                )
+            elif opcao == '5':
+                ContextManager.set_context(
+                    user_id, 
+                    platform, 
+                    ContextManager.CONTEXT_TYPES['FAQ'],
                     {}
                 )
 
@@ -104,40 +116,41 @@ class ResponseGenerator:
         entities = nlp_result['entities']
 
         # Gerar resposta com base na intenção
-        response = ResponseGenerator._generate_response_by_intent(intent, entities, user_id, platform)
+        response = ResponseGenerator._generate_response_by_intent(intent, entities, user_id, platform, message_text)
 
         # Salvar a resposta do bot
         Conversation.save_message(user_id, platform, response, is_from_user=False)
         return response
 
+
     @staticmethod
-    def _generate_response_by_intent(intent, entities, user_id, platform):
+    def _generate_response_by_intent(intent, entities, user_id, platform, message_text):
         """Gera uma resposta com base na intenção identificada"""
-        
+
         if intent == 'saudacao':
             return (
                 "Olá! Bem-vindo à Farmácia Virtual. Como posso ajudar você hoje? 😊\n\n"
                 "Posso fornecer informações sobre medicamentos, verificar disponibilidade de produtos, "
                 "informar horários de funcionamento e muito mais."
             )
-        
+
         elif intent == 'despedida':
             return (
                 "Obrigado por entrar em contato! Estamos sempre à disposição para ajudar. "
                 "Tenha um ótimo dia! 👋"
             )
-        
+
         elif intent == 'agradecimento':
             return (
                 "Por nada! Estou aqui para ajudar. Precisa de mais alguma coisa?"
             )
-        
+
         elif intent == 'info_medicamento':
             # Verificar se há medicamentos mencionados
             medicamentos = entities.get('medicamentos', [])
-            if medicamentos:#
+            if medicamentos:
                 medicine_name = medicamentos[0]
-                
+
                 # Definir contexto para continuar falando sobre este medicamento
                 ContextManager.set_context(
                     user_id, 
@@ -145,7 +158,7 @@ class ResponseGenerator:
                     ContextManager.CONTEXT_TYPES['ASKING_MEDICINE_INFO'],
                     {'medicine_name': medicine_name}
                 )
-                
+
                 return (
                     f"Você gostaria de informações sobre {medicine_name}. "
                     f"Estou buscando os detalhes para você..."
@@ -155,13 +168,13 @@ class ResponseGenerator:
                     "Qual medicamento você gostaria de saber mais informações? "
                     "Por favor, informe o nome do medicamento."
                 )
-        
+
         elif intent == 'preco':
             # Verificar se há medicamentos mencionados
             medicamentos = entities.get('medicamentos', [])
             if medicamentos:
                 medicine_name = medicamentos[0]
-                
+
                 # Aqui seria implementada a lógica para buscar o preço
                 # Por enquanto, apenas simulamos uma resposta
                 return f"O preço atual de {medicine_name} é R$ XX,XX. Posso ajudar com mais alguma informação?"
@@ -170,13 +183,13 @@ class ResponseGenerator:
                     "Qual produto você gostaria de saber o preço? "
                     "Por favor, informe o nome do produto."
                 )
-        
+
         elif intent == 'disponibilidade':
             # Verificar se há medicamentos mencionados
             medicamentos = entities.get('medicamentos', [])
             if medicamentos:
                 product_name = medicamentos[0]
-                
+
                 # Definir contexto para continuar falando sobre este produto
                 ContextManager.set_context(
                     user_id, 
@@ -184,7 +197,7 @@ class ResponseGenerator:
                     ContextManager.CONTEXT_TYPES['CHECKING_STOCK'],
                     {'product_name': product_name}
                 )
-                
+
                 return (
                     f"Você gostaria de verificar a disponibilidade de {product_name}. "
                     f"Estou consultando nosso estoque..."
@@ -194,7 +207,7 @@ class ResponseGenerator:
                     "Qual produto você gostaria de verificar a disponibilidade? "
                     "Por favor, informe o nome do produto."
                 )
-        
+
         elif intent == 'horario':
             return (
                 "Nossa farmácia está aberta nos seguintes horários:\n\n"
@@ -203,14 +216,14 @@ class ResponseGenerator:
                 "Domingos e Feriados: 09:00 às 13:00\n\n"
                 "Posso ajudar com mais alguma informação?"
             )
-        
+
         elif intent == 'localizacao':
             return (
                 "Nossa farmácia está localizada na Av. Principal, 123 - Centro. \n\n"
                 "Referência: Próximo ao Banco do Brasil.\n\n"
                 "Você pode nos encontrar facilmente pelo Google Maps pesquisando por 'Farmácia Virtual'."
             )
-        
+
         elif intent == 'ajuda':
             return (
                 "Posso ajudar você com:\n\n"
@@ -222,7 +235,7 @@ class ResponseGenerator:
                 "- Recomendações para sintomas\n\n"
                 "Como posso te ajudar hoje?"
             )
-        
+
         elif intent == 'falar_humano':
             return (
                 "Entendo que você prefere falar com um atendente humano. "
@@ -230,32 +243,80 @@ class ResponseGenerator:
                 "ou enviar um e-mail para atendimento@farmaciavirtual.com.br.\n\n"
                 "Nosso horário de atendimento humano é de segunda a sexta, das 8h às 18h."
             )
-        
+
         else:  # intent == 'desconhecido' ou qualquer outro não tratado
-            # Verificar se há sintomas mencionados
             sintomas = entities.get('sintomas', [])
-            if sintomas:
-                symptom = sintomas[0]
-                
-                # Definir contexto para esperar mais detalhes sobre o sintoma
-                ContextManager.set_context(
-                    user_id, 
-                    platform, 
-                    ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'],
-                    {'symptom': symptom}
-                )
-                
+
+            # Além dos sintomas já extraídos, tente encontrar sintomas pelos sinônimos no texto do usuário
+            texto_lower = message_text.lower()
+            sintomas_encontrados = set(sintomas)  # começar com os sintomas já extraídos
+
+            for sintoma, info in known_symptoms.items():
+                # Verifica o sintoma principal
+                if sintoma in texto_lower:
+                    sintomas_encontrados.add(sintoma)
+                # Verifica os sinônimos
+                for sinonimo in info.get('sinonimos', []):
+                    if sinonimo in texto_lower:
+                        sintomas_encontrados.add(sintoma)
+
+            sintomas_encontrados = list(sintomas_encontrados)
+
+            if not sintomas_encontrados:
+                # Nenhum sintoma identificado na entidade, pede mais detalhes
                 return (
-                    f"Entendi que você está com {symptom}. "
-                    f"Pode me dar mais detalhes sobre esse sintoma? "
-                    f"Por exemplo, há quanto tempo está sentindo, se há outros sintomas associados, etc."
+                    "Não consegui identificar sintomas claros na sua mensagem. "
+                    "Por favor, descreva melhor os sintomas que você está sentindo.\n\n"
+                    "Ou digite 0️⃣ para voltar ao menu principal."
                 )
-            
-            # Resposta padrão para intenções não reconhecidas
-            return (
-                "Desculpe, não entendi completamente sua solicitação. "
-                "Posso ajudar com informações sobre medicamentos, preços, disponibilidade, "
-                "horários de funcionamento ou localização da farmácia. "
-                "Como posso te ajudar?"
+
+            response = ""
+            for sintoma in sintomas_encontrados:
+                # Detectar se o sintoma está na base conhecida
+                matched_symptoms = ContextManager.detectar_sintoma_spacy(sintoma, known_symptoms)
+
+                if matched_symptoms:
+                    for matched_sintoma in matched_symptoms:
+                        medicamentos = known_symptoms.get(matched_sintoma, {}).get('medicamentos', [])
+
+                        if not medicamentos:
+                            response += f"⚠️ Nenhum medicamento sugerido para o sintoma: *{matched_sintoma}*\n\n"
+                            continue
+
+                        response += f"Para o sintoma *{matched_sintoma}*, posso sugerir:\n\n"
+                        for i, med_name in enumerate(medicamentos, 1):
+                            product = Product.get_product_by_name(med_name)
+                            if product:
+                                description = product.get('description', 'Sem descrição disponível.')
+                                manufacturer = product.get('manufacturer', 'Desconhecido')
+                                price = product.get('price', 'N/A')
+                                administration = product.get('administration_route', 'Via não informada')
+                            else:
+                                description = 'Medicamento não encontrado no banco de dados.'
+                                manufacturer = 'Desconhecido'
+                                price = 'N/A'
+                                administration = 'Via não informada'
+
+                            response += (
+                                f"🔹\n"
+                                f"{i}. {med_name.upper()} - {description}\n"
+                                f"Administração: {administration}\n"
+                            )
+                        response += "────────────\n\n"
+                else:
+                    # Caso o sintoma enviado não esteja no known_symptoms
+                    response += (
+                        f"Não consegui associar o sintoma *{sintoma}* a nenhuma medicação. "
+                        "Por favor, forneça mais detalhes ou descreva outro sintoma.\n\n"
+                    )
+
+            response += (
+                "Lembre-se que esta é apenas uma sugestão inicial.\n"
+                "Gostaria de seguir com o atendimento? Digite o número do medicamento ou envie outro sintoma.\n"
+                "Digite 0️⃣ para voltar ao menu principal."
             )
 
+            # Define o contexto para aguardar o próximo sintoma
+            ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {'symptoms': sintomas_encontrados})
+
+            return response

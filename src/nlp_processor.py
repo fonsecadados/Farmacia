@@ -81,31 +81,37 @@ class NLPProcessor:
     # Entidades comuns em farmácias
     ENTITIES = {
     'medicamentos': [
-        'dipirona', 'paracetamol', 'ibuprofeno', 'amoxicilina', 'omeprazol', 'losartana', 'atenolol', 
+        'dipirona', 'paracetamol', 'ibuprofeno', 'amoxicilina', 'omeprazol', 'losartana', 'atenolol',
         'rivotril', 'neosaldina', 'dorflex', 'bromexina', 'clobutinol', 'dramin', 'plasil',
-        'antigripal', 'descongex', 'sorine', 'benalet', 'melhorex', 'imosec', 'floratil'
+        'antigripal', 'descongex', 'sorine', 'benalet', 'melhorex', 'imosec', 'floratil',
+        'loratadina', 'sal de fruta eno', 'engov', 'multigrip', 'benegrip', 'tylenol', 'doril',
+        'aspirina', 'airon', 'lavitan', 'cimegripe', 'redoxon', 'eno frutas cítricas', 'sonridor',
+        'doralgina', 'xantinon b12', 'pastilhas valda', 'maxalgina', 'neosoro', 'buscopan', 'ranitidina'
     ],
     'sintomas': [
-        'dor', 'febre', 'tosse', 'gripe', 'resfriado', 'alergia', 'coceira', 'náusea', 'nausea', 
-        'vômito', 'vomito', 'diarreia', 'sentindo', 'corte',
+        'dor', 'febre', 'tosse', 'gripe', 'resfriado', 'alergia', 'coceira', 'náusea', 'nausea',
+        'vômito', 'vomito', 'diarreia', 'sentindo', 'corte', 'azia', 'má digestão', 'ma digestao',
         'dor de cabeça', 'cefaleia', 'cabeça doendo', 'enxaqueca', 'dor na cabeça', 'cabeça latejando',
         'calafrio', 'temperatura alta', 'febril', 'febre alta', 'febre persistente',
-        'tossindo', 'tosse seca', 'tosse com catarro', 'tosse persistente',
+        'tossindo', 'tosse seca', 'tosse com catarro', 'tosse persistente', 'tosse irritativa',
         'dor muscular', 'músculos doloridos', 'dor nos músculos', 'dores musculares', 'mialgia',
         'enjoo', 'vontade de vomitar', 'náuseas', 'náusea persistente',
-        'influenza', 'estado gripal', 'síndrome gripal',
+        'influenza', 'estado gripal', 'síndrome gripal', 'sintomas gripais',
         'congestão nasal', 'nariz entupido', 'nariz congestionado', 'coriza', 'nariz escorrendo',
         'dor de garganta', 'garganta inflamada', 'garganta dolorida', 'dor na garganta', 'faringite',
         'enjoo com vômito', 'vomitar', 'náusea intensa', 'expelir conteúdo estomacal',
-        'fezes líquidas', 'evacuações frequentes', 'intestino solto'
+        'fezes líquidas', 'evacuações frequentes', 'intestino solto',
+        'cólicas intestinais', 'cólicas abdominais', 'colica', 'cólicas'
     ],
     'categorias': [
-        'antibiótico', 'antibiotico', 'analgésico', 'analgesico', 'anti-inflamatório', 
-        'anti-inflamatorio', 'antialérgico', 'antialergico', 'vitamina',
-        'neurológico', 'infeccioso', 'respiratório', 'muscular', 'digestivo'
+        'antibiótico', 'antibiotico', 'analgésico', 'analgesico', 'anti-inflamatório',
+        'anti-inflamatorio', 'antialérgico', 'antialergico', 'vitamina', 'vitaminas', 'suplemento',
+        'neurológico', 'infeccioso', 'respiratório', 'muscular', 'digestivo',
+        'antiácido', 'antigripal', 'combinado', 'expectorante', 'antitussígeno',
+        'relaxante muscular', 'antiemético', 'descongestionante', 'analgésico para garganta',
+        'antisséptico bucal', 'antidiarreico', 'probiótico', 'antiespasmódico', 'pastilha'
     ]
 }
-
     
     @staticmethod
     def preprocess_text(text):

@@ -133,7 +133,8 @@ class Product:
         return list(products.find({
             '$or': [
                 {'name': {'$regex': query, '$options': 'i'}},
-                {'description': {'$regex': query, '$options': 'i'}}
+                {'description': {'$regex': query, '$options': 'i'}},
+                {'manufacturer': {'$regex': query, '$options': 'i'}}
             ]
         }).limit(limit))
     
@@ -149,6 +150,10 @@ class Product:
 
 class FAQ:
     """Modelo para perguntas frequentes"""
+    @staticmethod
+    def get_all():
+        # Retorna todas as FAQs como uma lista de dicionários ordenada
+        return list(db.faqs.find())  #
     
     @staticmethod
     def add_faq(question, answer, category=None):
