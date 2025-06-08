@@ -154,18 +154,18 @@ class ContextManager:
                             administration = 'Via não informada'
 
                         response += (
-                            f"🔹\n\n"
-                            f"{i}. {med_name.upper()} - {description}\n\n"
+                            f"\n"
+                            f"🔹 {i}. {med_name.upper()} - {description}\n\n"
                         )
 
                     response += "────────────\n\n"
 
                 response += (
-                    "⚠️ ATENÇÃO ⚠️\n\n"
-                    "Não indicamos a automedicação.\n"
-                    "Para Dosagem e valores, favor falar com um de nossos atendentes\n\n"
-                    "Digite 1️⃣ para ser redirecionado\n"
-                    "Digite 0️⃣ para ser redirecionado\n"
+                    "⚠️ ATENwwÇÃO ⚠️\n\n"
+                    "A sugestão de medicação é para fins de agilizar seu atendimento\n\n"
+                    "NÃO INDICAMOS A AUTOMEDICAÇÃO\n\n"
+                    "Digite 1️⃣ para ser falar com um de nossos atendentes\n\n"
+                    "Digite 0️⃣ para retornar ao menu anterior\n"
                 )
 
                 return response, ContextManager.CONTEXT_TYPES['NONE'], None

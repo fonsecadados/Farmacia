@@ -298,25 +298,32 @@ class ResponseGenerator:
                                 administration = 'Via não informada'
 
                             response += (
-                                f"🔹\n"
-                                f"{i}. {med_name.upper()} - {description}\n"
-                                f"Administração: {administration}\n"
+                                f"\n"
+                                f"🔹 {i}. {med_name.upper()} - {description}\n\n"
                             )
                         response += "────────────\n\n"
-                else:
-                    # Caso o sintoma enviado não esteja no known_symptoms
-                    response += (
-                        f"Não consegui associar o sintoma *{sintoma}* a nenhuma medicação. "
-                        "Por favor, forneça mais detalhes ou descreva outro sintoma.\n\n"
-                    )
+                # else:
+                #     # Caso o sintoma enviado não esteja no known_symptoms
+                #     response += (
+                #         f"Não consegui associar o sintoma *{sintoma}* a nenhuma medicação. "
+                #         "Por favor, forneça mais detalhes ou descreva outro sintoma.\n\n"
+                #     )
 
             response += (
-                "Lembre-se que esta é apenas uma sugestão inicial.\n"
-                "Gostaria de seguir com o atendimento? Digite o número do medicamento ou envie outro sintoma.\n"
-                "Digite 0️⃣ para voltar ao menu principal."
+                "⚠️ ATENÇÃO ⚠️\n\n"
+                "A sugestão de medicação é para fins de agilizar seu atendimento\n\n"
+                "NÃO INDICAMOS A AUTOMEDICAÇÃO\n\n"
+                "Digite 1️⃣ para ser falar com um de nossos atendentes\n\n"
+                "Digite 0️⃣ para retornar ao menu anterior\n"
             )
 
-            # Define o contexto para aguardar o próximo sintoma
-            ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {'symptoms': sintomas_encontrados})
+            return response, ContextManager.CONTEXT_TYPES['NONE'], None
 
-            return response
+            # response += (
+            #     "Lembre-se que esta é apenas uma sugestão inicial.\n"
+            #     "Gostaria de seguir com o atendimento? Digite o número do medicamento ou envie outro sintoma.\n"
+            #     "Digite 0️⃣ para voltar ao menu principal."
+            # )
+
+            # # Define o contexto para aguardar o próximo sintoma
+            # ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {'symptoms': sintomas_encontrados})
