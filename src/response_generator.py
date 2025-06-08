@@ -317,7 +317,7 @@ class ResponseGenerator:
                 "Digite 0️⃣ para retornar ao menu anterior\n"
             )
 
-            return response, ContextManager.CONTEXT_TYPES['NONE'], None
+            # return response, ContextManager.CONTEXT_TYPES['NONE'], None
 
             # response += (
             #     "Lembre-se que esta é apenas uma sugestão inicial.\n"
@@ -326,4 +326,4 @@ class ResponseGenerator:
             # )
 
             # # Define o contexto para aguardar o próximo sintoma
-            # ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {'symptoms': sintomas_encontrados})
+            ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {'symptoms': sintomas_encontrados})

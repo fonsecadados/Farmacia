@@ -161,7 +161,7 @@ class ContextManager:
                     response += "────────────\n\n"
 
                 response += (
-                    "⚠️ ATENwwÇÃO ⚠️\n\n"
+                    "⚠️ ATENÇÃO ⚠️\n\n"
                     "A sugestão de medicação é para fins de agilizar seu atendimento\n\n"
                     "NÃO INDICAMOS A AUTOMEDICAÇÃO\n\n"
                     "Digite 1️⃣ para ser falar com um de nossos atendentes\n\n"

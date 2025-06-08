@@ -133,7 +133,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     except Exception as e:
         logger.error(f"Erro ao processar mensagem: {e}")
         await update.message.reply_text(
-            "Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente mais tarde."
+            "Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente."
         )
 
 def main() -> None:
