@@ -3,6 +3,11 @@ import re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk
+import json
+from models import Product
+
+# Inicializa conjuntos para evitar duplicatas
+
 
 # Baixar recursos do NLTK (se necessário)
 try:
@@ -76,43 +81,30 @@ class NLPProcessor:
         'quero atendimento humano', 'me transfere', 'tem alguém aí?', 'quero ajuda de pessoa'
     ]
 }
+  
 
-    
-    # Entidades comuns em farmácias
-    ENTITIES = {
-    'medicamentos': [
-        'dipirona', 'paracetamol', 'ibuprofeno', 'amoxicilina', 'omeprazol', 'losartana', 'atenolol',
-        'rivotril', 'neosaldina', 'dorflex', 'bromexina', 'clobutinol', 'dramin', 'plasil',
-        'antigripal', 'descongex', 'sorine', 'benalet', 'melhorex', 'imosec', 'floratil',
-        'loratadina', 'sal de fruta eno', 'engov', 'multigrip', 'benegrip', 'tylenol', 'doril',
-        'aspirina', 'airon', 'lavitan', 'cimegripe', 'redoxon', 'eno frutas cítricas', 'sonridor',
-        'doralgina', 'xantinon b12', 'pastilhas valda', 'maxalgina', 'neosoro', 'buscopan', 'ranitidina'
-    ],
-    'sintomas': [
-        'dor', 'febre', 'tosse', 'gripe', 'resfriado', 'alergia', 'coceira', 'náusea', 'nausea',
-        'vômito', 'vomito', 'diarreia', 'sentindo', 'corte', 'azia', 'má digestão', 'ma digestao',
-        'dor de cabeça', 'cefaleia', 'cabeça doendo', 'enxaqueca', 'dor na cabeça', 'cabeça latejando',
-        'calafrio', 'temperatura alta', 'febril', 'febre alta', 'febre persistente',
-        'tossindo', 'tosse seca', 'tosse com catarro', 'tosse persistente', 'tosse irritativa',
-        'dor muscular', 'músculos doloridos', 'dor nos músculos', 'dores musculares', 'mialgia',
-        'enjoo', 'vontade de vomitar', 'náuseas', 'náusea persistente',
-        'influenza', 'estado gripal', 'síndrome gripal', 'sintomas gripais',
-        'congestão nasal', 'nariz entupido', 'nariz congestionado', 'coriza', 'nariz escorrendo',
-        'dor de garganta', 'garganta inflamada', 'garganta dolorida', 'dor na garganta', 'faringite',
-        'enjoo com vômito', 'vomitar', 'náusea intensa', 'expelir conteúdo estomacal',
-        'fezes líquidas', 'evacuações frequentes', 'intestino solto',
-        'cólicas intestinais', 'cólicas abdominais', 'colica', 'cólicas'
-    ],
-    'categorias': [
-        'antibiótico', 'antibiotico', 'analgésico', 'analgesico', 'anti-inflamatório',
-        'anti-inflamatorio', 'antialérgico', 'antialergico', 'vitamina', 'vitaminas', 'suplemento',
-        'neurológico', 'infeccioso', 'respiratório', 'muscular', 'digestivo',
-        'antiácido', 'antigripal', 'combinado', 'expectorante', 'antitussígeno',
-        'relaxante muscular', 'antiemético', 'descongestionante', 'analgésico para garganta',
-        'antisséptico bucal', 'antidiarreico', 'probiótico', 'antiespasmódico', 'pastilha'
-    ]
-}
-    
+    @staticmethod
+    def get_entities_from_products():
+        """Extrai entidades dinamicamente dos produtos no banco"""
+        produtos = Product.get_all()
+        medicamentos = set()
+        sintomas = set()
+        categorias = set()
+
+        for p in produtos:
+            if 'name' in p:
+                medicamentos.add(p['name'].lower())
+            if 'indicacao' in p:
+                sintomas.update([s.lower() for s in p['indicacao']])
+            if 'category' in p:
+                categorias.add(p['category'].lower())
+
+        return {
+            'medicamentos': list(medicamentos),
+            'sintomas': list(sintomas),
+            'categorias': list(categorias)
+        }
+
     @staticmethod
     def preprocess_text(text):
         """Pré-processa o texto para análise"""
@@ -161,29 +153,31 @@ class NLPProcessor:
         for intent, score in intent_scores.items():
             if score == max_score:
                 return intent
-    
+        
     @staticmethod
     def extract_entities(text):
         """Extrai entidades do texto usando spaCy e regras personalizadas"""
         doc = nlp(text.lower())
-        entities = {}
-        
-        # Extrair entidades do spaCy
+        extracted_entities = {}
+
+        # spaCy entities (se desejar manter)
         for ent in doc.ents:
-            if ent.label_ not in entities:
-                entities[ent.label_] = []
-            entities[ent.label_].append(ent.text)
-        
-        # Verificar entidades personalizadas
-        for entity_type, keywords in NLPProcessor.ENTITIES.items():
-            if entity_type not in entities:
-                entities[entity_type] = []
-            
+            if ent.label_ not in extracted_entities:
+                extracted_entities[ent.label_] = []
+            extracted_entities[ent.label_].append(ent.text)
+
+        # Entidades do banco de dados
+        dynamic_entities = NLPProcessor.get_entities_from_products()
+        for entity_type, keywords in dynamic_entities.items():
+            if entity_type not in extracted_entities:
+                extracted_entities[entity_type] = []
+
             for keyword in keywords:
-                if keyword in text.lower():
-                    entities[entity_type].append(keyword)
-        
-        return entities
+                pattern = r'\b' + re.escape(keyword) + r'\b'  # palavra inteira
+                if re.search(pattern, text.lower()) and keyword not in extracted_entities[entity_type]:
+                    extracted_entities[entity_type].append(keyword)
+
+        return extracted_entities
     
     @staticmethod
     def analyze_text(text):
@@ -196,4 +190,3 @@ class NLPProcessor:
             'entities': entities,
             'original_text': text
         }
-

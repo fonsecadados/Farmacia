@@ -6,35 +6,36 @@ import json
 with open(r'C:\Users\syafo\VIX_Intelligence\Farmacia\json\sintomas_med.json', 'r', encoding='utf-8') as f:
     known_symptoms = json.load(f)
 
-instagram_link = "https://www.instagram.com/farmes.colina?igsh=dXMwMzAycm9keHlp"
-instagram_link_promos = "https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MTA1ODI0OTM1NTE2NTAw?story_media_id=3646291519857893134_3212031575&igsh=MW94YXR5c2F2dHlzbw=="
+instagram_link = "https://www.instagram.com/xxxxx"
+instagram_link_promos = "https://www.instagram.com/xxxxx"
+
 MENU_OPTIONS = {
-    '1':( f"🏪 Nossa loja fica em Colina de Laranjeiras, n° 123 - Serra - ES\n\n"
+    '1': (f"🏪 Nossa loja fica em XXXX, n° 123 - XXXX - XX\n\n"
           f"💟 Aqui nós cuidamos de você! 💟\n"
           f"✔️ Funcionamos de Segunda à Sábado de 08h às 22h 🕜\n\n"
           f"📍 Tudo em perfumeria e medicamentos com precinho que cabe no seu bolso! 💲\n\n"
-          f"Contamos com vagas de estacionamento para PCD, além de atendimento parsonalizado!\n\n"
+          f"Contamos com vagas de estacionamento para PCD, além de atendimento personalizado!\n\n"
           f"\n"
           f"Visite nossa página no Instagram e fique por dentro das melhores promoções do mercado!"
           f"\n\n"
           f"{instagram_link}\n\n"
           f"Digite 1️⃣ para voltar ao Menu principal\n"
-          f"Digite 2️⃣ para ver PROMOÇÔES\n"
+          f"Digite 2️⃣ para ver PROMOÇÕES\n"
          ),
-    '2':( f"Bem vindo(a) ao cadastro na REDE Farmes!\n\n"
+    '2': (f"Bem vindo(a) ao cadastro na Farmácia XXXX!\n\n"
           f"⚠️ Atenção ⚠️\n"
-          f"Para continuar com o cadastro é preciso que você aceite a nossa POLÍTICA DE PRIVACIDADE, conforme orientedo pela Lei Geral de Proteção aos Dados (LGPD)\n\n"
+          f"Para continuar com o cadastro é preciso que você aceite a nossa POLÍTICA DE PRIVACIDADE, conforme orientado pela Lei Geral de Proteção aos Dados (LGPD)\n\n"
           f"Acesse:\n"
-          f"https:/www.redefarmes.com.br/institucional/politica-de-privacidade\n\n\n"
+          f"https:/www.xxxxx.com.br/institucional/politica-de-privacidade\n\n\n"
           f"Digite a opção escolhida:\n\n"
           f"1️⃣ Aceito os termos\n"
           f"2️⃣ Não aceito os termos"
           ),
-    '3': (f"🔥 Fique por dentro das PROMOÇÔES da semana na nossa página!\n\n"
+    '3': (f"🔥 Fique por dentro das PROMOÇÕES da semana na nossa página!\n\n"
           f"{instagram_link_promos}\n\n"
           ),
-    '4': "💬 Entandemos que você está apresentando alguns sintomas.\n\n Fale mais sobre eles para que possamos sugerir uma medicação\n\n"
-         "Digite 0️⃣ para voltar ao menu principal",
+    '4': ("💬 Entendemos que você está apresentando alguns sintomas.\n\n Fale mais sobre eles para que possamos sugerir uma medicação\n\n"
+          "Digite 0️⃣ para voltar ao menu principal"),
     '5': (f"Algumas perguntas Frequentes no nosso canal:\n\n"
           f"Digite o N° para receber resposta:\n\n"
           f"1️⃣ Qual o horário de funcionamento da farmácia?\n\n"
@@ -51,279 +52,156 @@ MENU_OPTIONS = {
           f"1️⃣2️⃣ Vocês possuem estacionamento para clientes?\n\n"
           f"1️⃣3️⃣ Tem desconto para convênios ou planos de saúde?\n\n"
           f"1️⃣4️⃣ Quais são os canais de atendimento da farmácia?\n\n\n"
-          f"Digite 0️⃣ para retornar ao menu principal."  
+          f"Digite 0️⃣ para retornar ao menu principal."
           ),
     '6': "🔔 Outras opções: falar com atendente, localização no mapa etc."
 }
 
-
 class ResponseGenerator:
     """Gerador de respostas para o bot de farmácia"""
-            
+
+    @staticmethod
+    def get_welcome_message(first_name=None):
+        """Retorna a mensagem de boas-vindas personalizada"""
+        num_loja = 27999999999
+        name_greeting = f", {first_name}" if first_name else ""
+        
+        return (
+            f"👋 Olá{name_greeting}! 👋\n\n"
+            "📍 Bem-vindo(a) ao Saúde Virtual📍\n🔹 Seu Farmacêutico Virtual em parceria com a Farmácia XXX 🔹\n\n" 
+            "Nosso objetivo é te auxiliar na escolha do medicamento ideal para cada situação.\n\n"
+            "Está com algum sintoma? Digite o que você está sentindo que vamos indicar a medicação correta!\n\n"
+            "NÃO INDICAMOS MEDICAÇÃO COM PRESCRIÇÃO MÉDICA\n\n\n"
+            "OU digite o número da opção:\n\n"
+            "1️⃣ Conheça nossa loja e os horários de funcionamento 🏥\n\n"
+            "2️⃣ Fazer cadastro na loja 🕜\n\n"
+            "3️⃣ Fique por dentro das PROMOÇÕES 💯\n\n"
+            "4️⃣ Tenho sintomas, preciso de recomendações 💊\n\n"
+            "5️⃣ Perguntas Frequentes ❔\n\n"
+            "6️⃣ Sugestões/Reclamações 📢\n\n\n"
+            f"Esse é um canal de atendimento automatizado, para falar com vendedor ligue para nossa loja:\n\n"
+            f"{num_loja}\n\n"
+            "💟 Como podemos te ajudar hoje? 💟"
+        )
+
+    @staticmethod
+    def _get_main_menu_text():
+        """Retorna o texto do menu principal"""
+        return ResponseGenerator.get_welcome_message()
+
     @staticmethod
     def generate_response(user_id, platform, message_text):
         """Gera uma resposta com base na mensagem do usuário e no contexto"""
-
-        # Salvar a mensagem do usuário
         Conversation.save_message(user_id, platform, message_text, is_from_user=True)
 
-        # Verificar se o usuário digitou uma opção numérica do menu
         opcao = message_text.strip()
-        if opcao in MENU_OPTIONS:
-            resposta_menu = MENU_OPTIONS[opcao]
+        current_context = ContextManager.get_current_context(user_id, platform)
 
-            # Se a opção for 4, iniciar contexto de sintomas
-            if opcao == '4':
-                ContextManager.set_context(
-                    user_id,
-                    platform,
-                    ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'],
-                    {}
-                )
+        # Tratamento do submenu da opção '1' (informações da loja)
+        if current_context == ContextManager.CONTEXT_TYPES.get('INFO_LOJA_SUBMENU'):
+            if opcao == '1':
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['MAIN_MENU'], {})
+                resposta = ResponseGenerator._get_main_menu_text()
+            elif opcao == '2':
+                resposta = MENU_OPTIONS['3']
+            else:
+                resposta = "Por favor, digite 1️⃣ para voltar ao Menu principal ou 2️⃣ para ver PROMOÇÕES."
+            
+            Conversation.save_message(user_id, platform, resposta, is_from_user=False)
+            return resposta
+
+        # Se estiver no menu principal e digitar uma opção numérica
+        elif current_context == ContextManager.CONTEXT_TYPES.get('MAIN_MENU') and opcao in MENU_OPTIONS:
+            if opcao == '1':
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['INFO_LOJA_SUBMENU'], {})
+                resposta = MENU_OPTIONS['1']
+            elif opcao == '2':
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_LGPD_RESPONSE'], {})
+                resposta = MENU_OPTIONS['2']
+            elif opcao == '3':
+                resposta = MENU_OPTIONS['3']
+            elif opcao == '4':
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {})
+                resposta = MENU_OPTIONS['4']
             elif opcao == '5':
-                ContextManager.set_context(
-                    user_id, 
-                    platform, 
-                    ContextManager.CONTEXT_TYPES['FAQ'],
-                    {}
-                )
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['FAQ'], {})
+                resposta = MENU_OPTIONS['5']
+            elif opcao == '6':
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['OTHER_OPTIONS'], {})
+                resposta = MENU_OPTIONS['6']
 
-            Conversation.save_message(user_id, platform, resposta_menu, is_from_user=False)
-            return resposta_menu
+            Conversation.save_message(user_id, platform, resposta, is_from_user=False)
+            return resposta
 
-        # Analisar o texto com NLP
-        nlp_result = NLPProcessor.analyze_text(message_text)
-
-        # Verificar se há um contexto ativo e processar a mensagem nesse contexto
-        context_response = ContextManager.process_in_context(user_id, platform, message_text, nlp_result)
-
-        if context_response and context_response[0]:
-            response, new_context_type, new_context_data = context_response
-
-            # Atualizar o contexto se necessário
-            if new_context_type:
-                ContextManager.set_context(user_id, platform, new_context_type, new_context_data)
-            elif new_context_type == ContextManager.CONTEXT_TYPES['NONE']:
-                ContextManager.clear_context(user_id, platform)
-
-            # Salvar a resposta do bot
-            Conversation.save_message(user_id, platform, response, is_from_user=False)
-            return response
-
-        # Se não houver contexto ativo ou o contexto não gerou resposta,
-        # processar a mensagem normalmente com base na intenção
-        intent = nlp_result['intent']
-        entities = nlp_result['entities']
-
-        # Gerar resposta com base na intenção
-        response = ResponseGenerator._generate_response_by_intent(intent, entities, user_id, platform, message_text)
-
-        # Salvar a resposta do bot
-        Conversation.save_message(user_id, platform, response, is_from_user=False)
-        return response
-
-
-    @staticmethod
-    def _generate_response_by_intent(intent, entities, user_id, platform, message_text):
-        """Gera uma resposta com base na intenção identificada"""
-
-        if intent == 'saudacao':
-            return (
-                "Olá! Bem-vindo à Farmácia Virtual. Como posso ajudar você hoje? 😊\n\n"
-                "Posso fornecer informações sobre medicamentos, verificar disponibilidade de produtos, "
-                "informar horários de funcionamento e muito mais."
-            )
-
-        elif intent == 'despedida':
-            return (
-                "Obrigado por entrar em contato! Estamos sempre à disposição para ajudar. "
-                "Tenha um ótimo dia! 👋"
-            )
-
-        elif intent == 'agradecimento':
-            return (
-                "Por nada! Estou aqui para ajudar. Precisa de mais alguma coisa?"
-            )
-
-        elif intent == 'info_medicamento':
-            # Verificar se há medicamentos mencionados
-            medicamentos = entities.get('medicamentos', [])
-            if medicamentos:
-                medicine_name = medicamentos[0]
-
-                # Definir contexto para continuar falando sobre este medicamento
-                ContextManager.set_context(
-                    user_id, 
-                    platform, 
-                    ContextManager.CONTEXT_TYPES['ASKING_MEDICINE_INFO'],
-                    {'medicine_name': medicine_name}
-                )
-
-                return (
-                    f"Você gostaria de informações sobre {medicine_name}. "
-                    f"Estou buscando os detalhes para você..."
-                )
+        # Tratamento de respostas dentro do contexto WAITING_LGPD_RESPONSE
+        elif current_context == ContextManager.CONTEXT_TYPES.get('WAITING_LGPD_RESPONSE'):
+            if opcao == '1':
+                resposta = "Obrigado por aceitar nossa Política de Privacidade. Agora podemos continuar com seu cadastro."
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['MAIN_MENU'], {})
+            elif opcao == '2':
+                resposta = "Você precisa aceitar a Política de Privacidade para continuar. Caso queira, digite 1️⃣ para aceitar."
             else:
-                return (
-                    "Qual medicamento você gostaria de saber mais informações? "
-                    "Por favor, informe o nome do medicamento."
-                )
+                resposta = "Por favor, digite 1️⃣ para aceitar ou 2️⃣ para recusar a Política de Privacidade."
 
-        elif intent == 'preco':
-            # Verificar se há medicamentos mencionados
-            medicamentos = entities.get('medicamentos', [])
-            if medicamentos:
-                medicine_name = medicamentos[0]
+            Conversation.save_message(user_id, platform, resposta, is_from_user=False)
+            return resposta
 
-                # Aqui seria implementada a lógica para buscar o preço
-                # Por enquanto, apenas simulamos uma resposta
-                return f"O preço atual de {medicine_name} é R$ XX,XX. Posso ajudar com mais alguma informação?"
+        # Tratamento do contexto FAQ
+        elif current_context == ContextManager.CONTEXT_TYPES.get('FAQ'):
+            faq_answers = {
+                '1': "Nossa farmácia funciona de segunda à sábado, das 08h às 22h.",
+                '2': "Aceitamos dinheiro, cartões de crédito e débito, e PIX.",
+                '3': "Sim, fazemos entrega na cidade. Consulte a disponibilidade para sua região.",
+                '4': "Sim, antibióticos só vendemos com receita médica.",
+                '5': "Sim, aceitamos receitas digitais válidas conforme a legislação.",
+                '6': "Sim, aplicamos vacinas contra gripe, covid e outras.",
+                '7': "Sim, medimos pressão arterial e glicose gratuitamente.",
+                '8': "Sim, você pode se cadastrar para receber nossas promoções via WhatsApp e e-mail.",
+                '9': "Não, não trabalhamos com medicamentos manipulados.",
+                '10': "Sim, troca de produtos pode ser feita conforme nossa política de trocas em até 7 dias.",
+                '11': "Nosso programa de fidelidade oferece descontos e pontos em compras.",
+                '12': "Sim, temos estacionamento gratuito para clientes.",
+                '13': "Oferecemos descontos para convênios parceiros. Consulte na loja.",
+                '14': "Atendemos via telefone, WhatsApp e presencialmente na loja."
+            }
+            if opcao == '0':
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['MAIN_MENU'], {})
+                resposta = ResponseGenerator._get_main_menu_text()
+            elif opcao in faq_answers:
+                resposta = faq_answers[opcao] + "\n\nDigite outro número para mais perguntas ou 0️⃣ para voltar ao menu principal."
             else:
-                return (
-                    "Qual produto você gostaria de saber o preço? "
-                    "Por favor, informe o nome do produto."
-                )
+                resposta = "Por favor, digite um número válido das perguntas frequentes ou 0️⃣ para voltar ao menu principal."
 
-        elif intent == 'disponibilidade':
-            # Verificar se há medicamentos mencionados
-            medicamentos = entities.get('medicamentos', [])
-            if medicamentos:
-                product_name = medicamentos[0]
+            Conversation.save_message(user_id, platform, resposta, is_from_user=False)
+            return resposta
 
-                # Definir contexto para continuar falando sobre este produto
-                ContextManager.set_context(
-                    user_id, 
-                    platform, 
-                    ContextManager.CONTEXT_TYPES['CHECKING_STOCK'],
-                    {'product_name': product_name}
-                )
-
-                return (
-                    f"Você gostaria de verificar a disponibilidade de {product_name}. "
-                    f"Estou consultando nosso estoque..."
-                )
+        # Contexto de sintomas
+        elif current_context == ContextManager.CONTEXT_TYPES.get('WAITING_SYMPTOM'):
+            if opcao == '0':
+                ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['MAIN_MENU'], {})
+                resposta = ResponseGenerator._get_main_menu_text()
             else:
-                return (
-                    "Qual produto você gostaria de verificar a disponibilidade? "
-                    "Por favor, informe o nome do produto."
-                )
+                resposta = f"Você mencionou: {message_text}. Estamos analisando seus sintomas para sugerir um medicamento."
+            
+            Conversation.save_message(user_id, platform, resposta, is_from_user=False)
+            return resposta
 
-        elif intent == 'horario':
-            return (
-                "Nossa farmácia está aberta nos seguintes horários:\n\n"
-                "Segunda a Sexta: 08:00 às 20:00\n"
-                "Sábados: 08:00 às 18:00\n"
-                "Domingos e Feriados: 09:00 às 13:00\n\n"
-                "Posso ajudar com mais alguma informação?"
-            )
+        # Verificação de sintomas/medicamentos
+        entities = NLPProcessor.get_entities_from_products()
+        message_lower = message_text.lower()
 
-        elif intent == 'localizacao':
-            return (
-                "Nossa farmácia está localizada na Av. Principal, 123 - Centro. \n\n"
-                "Referência: Próximo ao Banco do Brasil.\n\n"
-                "Você pode nos encontrar facilmente pelo Google Maps pesquisando por 'Farmácia Virtual'."
-            )
+        if any(ent.lower() in message_lower for ent in entities['sintomas'] + entities['medicamentos']):
+            ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {})
+            print('OK até aqui')
+            # Agora já processa diretamente
+            resposta, new_context_type, context_data = ContextManager.process_in_context(user_id, platform, message_text, {'intent': None})
+            if resposta:
+                ContextManager.set_context(user_id, platform, new_context_type, context_data or {})
+                Conversation.save_message(user_id, platform, resposta, is_from_user=False)
+                return resposta
 
-        elif intent == 'ajuda':
-            return (
-                "Posso ajudar você com:\n\n"
-                "- Informações sobre medicamentos\n"
-                "- Preços de produtos\n"
-                "- Verificação de disponibilidade em estoque\n"
-                "- Horários de funcionamento\n"
-                "- Localização da farmácia\n"
-                "- Recomendações para sintomas\n\n"
-                "Como posso te ajudar hoje?"
-            )
-
-        elif intent == 'falar_humano':
-            return (
-                "Entendo que você prefere falar com um atendente humano. "
-                "Para isso, você pode ligar para nossa central de atendimento no número (XX) XXXX-XXXX "
-                "ou enviar um e-mail para atendimento@farmaciavirtual.com.br.\n\n"
-                "Nosso horário de atendimento humano é de segunda a sexta, das 8h às 18h."
-            )
-
-        else:  # intent == 'desconhecido' ou qualquer outro não tratado
-            sintomas = entities.get('sintomas', [])
-
-            # Além dos sintomas já extraídos, tente encontrar sintomas pelos sinônimos no texto do usuário
-            texto_lower = message_text.lower()
-            sintomas_encontrados = set(sintomas)  # começar com os sintomas já extraídos
-
-            for sintoma, info in known_symptoms.items():
-                # Verifica o sintoma principal
-                if sintoma in texto_lower:
-                    sintomas_encontrados.add(sintoma)
-                # Verifica os sinônimos
-                for sinonimo in info.get('sinonimos', []):
-                    if sinonimo in texto_lower:
-                        sintomas_encontrados.add(sintoma)
-
-            sintomas_encontrados = list(sintomas_encontrados)
-
-            if not sintomas_encontrados:
-                # Nenhum sintoma identificado na entidade, pede mais detalhes
-                return (
-                    "Não consegui identificar sintomas claros na sua mensagem. "
-                    "Por favor, descreva melhor os sintomas que você está sentindo.\n\n"
-                    "Ou digite 0️⃣ para voltar ao menu principal."
-                )
-
-            response = ""
-            for sintoma in sintomas_encontrados:
-                # Detectar se o sintoma está na base conhecida
-                matched_symptoms = ContextManager.detectar_sintoma_spacy(sintoma, known_symptoms)
-
-                if matched_symptoms:
-                    for matched_sintoma in matched_symptoms:
-                        medicamentos = known_symptoms.get(matched_sintoma, {}).get('medicamentos', [])
-
-                        if not medicamentos:
-                            response += f"⚠️ Nenhum medicamento sugerido para o sintoma: *{matched_sintoma}*\n\n"
-                            continue
-
-                        response += f"Para o sintoma *{matched_sintoma}*, posso sugerir:\n\n"
-                        for i, med_name in enumerate(medicamentos, 1):
-                            product = Product.get_product_by_name(med_name)
-                            if product:
-                                description = product.get('description', 'Sem descrição disponível.')
-                                manufacturer = product.get('manufacturer', 'Desconhecido')
-                                price = product.get('price', 'N/A')
-                                administration = product.get('administration_route', 'Via não informada')
-                            else:
-                                description = 'Medicamento não encontrado no banco de dados.'
-                                manufacturer = 'Desconhecido'
-                                price = 'N/A'
-                                administration = 'Via não informada'
-
-                            response += (
-                                f"\n"
-                                f"🔹 {i}. {med_name.upper()} - {description}\n\n"
-                            )
-                        response += "────────────\n\n"
-                # else:
-                #     # Caso o sintoma enviado não esteja no known_symptoms
-                #     response += (
-                #         f"Não consegui associar o sintoma *{sintoma}* a nenhuma medicação. "
-                #         "Por favor, forneça mais detalhes ou descreva outro sintoma.\n\n"
-                #     )
-
-            response += (
-                "⚠️ ATENÇÃO ⚠️\n\n"
-                "A sugestão de medicação é para fins de agilizar seu atendimento\n\n"
-                "NÃO INDICAMOS A AUTOMEDICAÇÃO\n\n"
-                "Digite 1️⃣ para ser falar com um de nossos atendentes\n\n"
-                "Digite 0️⃣ para retornar ao menu anterior\n"
-            )
-
-            # return response, ContextManager.CONTEXT_TYPES['NONE'], None
-
-            # response += (
-            #     "Lembre-se que esta é apenas uma sugestão inicial.\n"
-            #     "Gostaria de seguir com o atendimento? Digite o número do medicamento ou envie outro sintoma.\n"
-            #     "Digite 0️⃣ para voltar ao menu principal."
-            # )
-
-            # # Define o contexto para aguardar o próximo sintoma
-            ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], {'symptoms': sintomas_encontrados})
+        # Caso padrão - mostrar menu principal
+        ContextManager.set_context(user_id, platform, ContextManager.CONTEXT_TYPES['MAIN_MENU'], {})
+        resposta = ResponseGenerator._get_main_menu_text()
+        Conversation.save_message(user_id, platform, resposta, is_from_user=False)
+        return resposta

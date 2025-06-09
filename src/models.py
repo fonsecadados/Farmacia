@@ -9,7 +9,7 @@ db = client[DB_NAME]
 # Coleções
 users = db.users
 conversations = db.conversations
-products = db.products
+products_collection = db.products
 faqs = db.faqs
 
 class User:
@@ -107,46 +107,48 @@ class Conversation:
 
 
 class Product:
-    """Modelo para produtos/medicamentos"""
-    
-    @staticmethod
-    def add_product(name, description, price, stock, category, manufacturer, dosage_form, administration_route, prescription_required=False):
-        """Adiciona um novo produto ao catálogo"""
-        product = {
-            'name': name,
-            'description': description,
-            'price': price,
-            'stock': stock,
-            'category': category,
-            'prescription_required': prescription_required,
-            'manufacturer': manufacturer,
-            'dosage_form' : dosage_form,
-            'administration_route' : administration_route,
-            'created_at': datetime.now(),
-            'updated_at': datetime.now()
-        }
-        products.insert_one(product)
-    
-    @staticmethod
-    def search_products(query, limit=5):    
-        """Busca produtos pelo nome ou descrição"""
-        return list(products.find({
-            '$or': [
-                {'name': {'$regex': query, '$options': 'i'}},
-                {'description': {'$regex': query, '$options': 'i'}},
-                {'manufacturer': {'$regex': query, '$options': 'i'}}
-            ]
-        }).limit(limit))
-    
-    @staticmethod
-    def get_product_by_name(name):
-        """Obtém um produto pelo nome exato (insensível a maiúsculas/minúsculas)"""
-        return products.find_one({
-            'name': {
-                '$regex': f'^{name}$',
-                '$options': 'i'
+        """Modelo para produtos/medicamentos"""
+        
+        @staticmethod
+        def add_product(name, description, category, manufacturer, dosage_form, administration_route, principio_ativo, link_bula, indicacao):
+            product = {
+                'name': name,
+                'principio_ativo' : principio_ativo,
+                'description': description,
+                'category': category,
+                'manufacturer': manufacturer,
+                'dosage_form' : dosage_form,
+                'administration_route' : administration_route,
+                'link_bula' : link_bula,
+                'indicacao' : indicacao,
+                'created_at': datetime.now(),
+                'updated_at': datetime.now()
             }
-        })
+            products_collection.insert_one(product)
+        
+        @staticmethod
+        def search_products(query, limit=5):    
+            return list(products_collection.find({
+                '$or': [
+                    {'name': {'$regex': query, '$options': 'i'}},
+                    {'description': {'$regex': query, '$options': 'i'}},
+                    {'manufacturer': {'$regex': query, '$options': 'i'}},
+                    {'principio_ativo': {'$regex': query, '$options': 'i'}},
+                ]
+            }).limit(limit))
+        
+        @staticmethod
+        def get_product_by_name(name):
+            name = name.strip().lower()
+            return products_collection.find_one({
+                'name': {'$regex': name, '$options': 'i'}
+            })
+
+        @staticmethod
+        def get_all():
+            """Retorna todos os produtos do banco"""
+            return list(products_collection.find())
+
 
 class FAQ:
     """Modelo para perguntas frequentes"""

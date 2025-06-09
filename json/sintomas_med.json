@@ -3,60 +3,193 @@
     "sinonimos": ["cefaleia", "cabeça doendo", "enxaqueca", "dor na cabeça", "cabeça latejando"],
     "categoria": "neurológico",
     "gravidade": "leve",
-    "medicamentos": ["Dipirona", "Paracetamol", "Ibuprofeno"]
+    "medicamentos": [
+      "Dipirona Sódica",
+      "Paracetamol",
+      "Ibuprofeno (Advil/Ibupril)",
+      "Neosaldina",
+      "Doralgina",
+      "Melhoral",
+      "AAS (Ácido Acetilsalicílico)"
+    ]
   },
   "febre": {
     "sinonimos": ["calafrio", "temperatura alta", "febril", "febre alta", "febre persistente"],
     "categoria": "infeccioso",
     "gravidade": "moderada",
-    "medicamentos": ["Dipirona", "Paracetamol"]
+    "medicamentos": [
+      "Dipirona Sódica",
+      "Paracetamol",
+      "AAS (Ácido Acetilsalicílico)",
+      "Alivium",
+      "Tylenol",
+      "Maxalgina"
+    ]
   },
   "tosse": {
     "sinonimos": ["tossindo", "tosse seca", "tosse com catarro", "tosse persistente"],
     "categoria": "respiratório",
     "gravidade": "moderada",
-    "medicamentos": ["Bromexina", "Clobutinol"]
+    "medicamentos": [
+      "Vick Vaporub",
+      "Valda"
+    ]
   },
   "dor muscular": {
     "sinonimos": ["músculos doloridos", "dor nos músculos", "dores musculares", "mialgia"],
     "categoria": "muscular",
     "gravidade": "leve",
-    "medicamentos": ["Ibuprofeno", "Dorflex"]
+    "medicamentos": [
+      "Ibuprofeno (Advil/Ibupril)",
+      "Dorflex",
+      "Torsilax",
+      "Mioflex",
+      "Flanax",
+      "Nimesulida"
+    ]
   },
   "náusea": {
     "sinonimos": ["enjoo", "vontade de vomitar", "náuseas", "náusea persistente"],
     "categoria": "digestivo",
     "gravidade": "leve",
-    "medicamentos": ["Dramin", "Plasil"]
+    "medicamentos": [
+      "Dramin"
+    ]
   },
   "gripe": {
     "sinonimos": ["resfriado", "influenza", "estado gripal", "síndrome gripal"],
     "categoria": "infeccioso",
     "gravidade": "moderada",
-    "medicamentos": ["Antigripal", "Paracetamol"]
+    "medicamentos": [
+      "Benegrip",
+      "Cimegripe",
+      "Coristina D",
+      "Multigrip",
+      "Resfenol",
+      "Vick Pyrena",
+      "Paracetamol"
+    ]
   },
   "congestão nasal": {
     "sinonimos": ["nariz entupido", "nariz congestionado", "coriza", "nariz escorrendo"],
     "categoria": "respiratório",
     "gravidade": "leve",
-    "medicamentos": ["Descongex", "Sorine"]
+    "medicamentos": [
+      "Neosoro",
+      "Rinosoro",
+      "Vick Vaporub",
+      "Benegrip",
+      "Coristina D"
+    ]
   },
   "dor de garganta": {
     "sinonimos": ["garganta inflamada", "garganta dolorida", "dor na garganta", "faringite"],
     "categoria": "respiratório",
     "gravidade": "leve",
-    "medicamentos": ["Benalet", "Melhorex"]
+    "medicamentos": [
+      "Valda",
+      "Paracetamol",
+      "Ibuprofeno (Advil/Ibupril)"
+    ]
   },
   "vômito": {
     "sinonimos": ["enjoo com vômito", "vomitar", "náusea intensa", "expelir conteúdo estomacal"],
     "categoria": "digestivo",
     "gravidade": "moderada",
-    "medicamentos": ["Dramin", "Plasil"]
+    "medicamentos": [
+      "Dramin"
+    ]
   },
   "diarreia": {
     "sinonimos": ["fezes líquidas", "evacuações frequentes", "intestino solto"],
     "categoria": "digestivo",
     "gravidade": "leve",
-    "medicamentos": ["Imosec", "Floratil"]
+    "medicamentos": []
+  },
+  "azia": {
+    "sinonimos": ["queimação", "pirose", "refluxo", "má digestão"],
+    "categoria": "digestivo",
+    "gravidade": "leve",
+    "medicamentos": [
+      "ENO",
+      "Estomazil",
+      "Gastrol",
+      "Omeprazol",
+      "Simeco Plus",
+      "Sal de Fruta ENO"
+    ]
+  },
+  "cólica": {
+    "sinonimos": ["dor abdominal", "espasmo", "cólica menstrual", "cólica intestinal"],
+    "categoria": "gastrointestinal",
+    "gravidade": "moderada",
+    "medicamentos": [
+      "Buscopan",
+      "Dipirona Sódica"
+    ]
+  },
+  "alergia": {
+    "sinonimos": ["reação alérgica", "urticária", "rinite alérgica", "prurido"],
+    "categoria": "alérgico",
+    "gravidade": "leve",
+    "medicamentos": [
+      "Loratadina",
+      "Polaramine",
+      "Hixizine",
+      "Zina",
+      "Dexametasona"
+    ]
+  },
+  "ansiedade": {
+    "sinonimos": ["nervosismo", "agitação", "irritabilidade", "estresse"],
+    "categoria": "mental",
+    "gravidade": "leve",
+    "medicamentos": [
+      "Maracugina",
+      "Nervocalm"
+    ]
+  },
+  "ressaca": {
+    "sinonimos": ["mal-estar pós-álcool", "dor de cabeça pós-álcool", "desidratação alcoólica"],
+    "categoria": "toxicologico",
+    "gravidade": "leve",
+    "medicamentos": [
+      "Engov",
+      "Epocler"
+    ]
+  },
+  "assadura": {
+    "sinonimos": ["irritação cutânea", "dermatite de fralda", "vermelhidão na pele"],
+    "categoria": "dermatológico",
+    "gravidade": "leve",
+    "medicamentos": [
+      "Bepantol"
+    ]
+  },
+  "deficiência vitamínica": {
+    "sinonimos": ["falta de vitaminas", "hipovitaminose", "carência nutricional"],
+    "categoria": "nutricional",
+    "gravidade": "leve",
+    "medicamentos": [
+      "Citoneurin",
+      "Vitamina C",
+      "Xantinon B12"
+    ]
+  },
+  "hipertensão": {
+    "sinonimos": ["pressão alta", "PA elevada", "hipertensão arterial"],
+    "categoria": "cardiovascular",
+    "gravidade": "grave",
+    "medicamentos": [
+      "Losartana Potássica"
+    ]
+  },
+  "hipotireoidismo": {
+    "sinonimos": ["tireoide lenta", "deficiência tireoidiana", "bócio"],
+    "categoria": "endócrino",
+    "gravidade": "moderada",
+    "medicamentos": [
+      "Puran T4"
+    ]
   }
 }

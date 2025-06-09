@@ -3,74 +3,80 @@ import json
 import spacy
 import re
 from nltk.tokenize import word_tokenize
-
+from unidecode import unidecode
+from models import Product
 
 nlp = spacy.load("pt_core_news_sm")
 
 with open(r'C:\Users\syafo\VIX_Intelligence\Farmacia\json\sintomas_med.json', 'r', encoding='utf-8') as f:
     known_symptoms = json.load(f)
 
+instagram_link = "https://www.instagram.com/xxxxx"
+instagram_link_promos = "https://www.instagram.com/xxxxx"
+
 class ContextManager:
     """Gerenciador de contexto para fluxos de conversação"""
-    
+
     CONTEXT_TYPES = {
         'NONE': 'none',
+        'INFO_LOJA_SUBMENU': 'info_loja_submenu',
+        'WAITING_LGPD_RESPONSE': 'waiting_lgpd_response',
         'ASKING_MEDICINE_INFO': 'asking_medicine_info',
-        'CHECKING_STOCK': 'checking_stock',
+        'OTHER_OPTIONS': 'other_options',
+        # 'CHECKING_STOCK': 'checking_stock',
         'WAITING_SYMPTOM': 'waiting_symptom',
-        'CONFIRMING_ORDER': 'confirming_order',
         'HUMAN': 'human',
         'MAIN_MENU': 'main_menu',
-        'FAQ' : 'faq'
+        'FAQ': 'faq'
     }
-    
+
     @staticmethod
     def get_current_context(user_id, platform):
         context = Conversation.get_context(user_id, platform)
         if not context:
             return {'type': ContextManager.CONTEXT_TYPES['NONE'], 'data': {}}
         return context
-    
+
     @staticmethod
     def set_context(user_id, platform, context_type, context_data=None):
         if context_type not in ContextManager.CONTEXT_TYPES.values():
             raise ValueError(f"Tipo de contexto inválido: {context_type}")
         Conversation.set_context(user_id, platform, context_type, context_data or {})
-    
+
     @staticmethod
     def clear_context(user_id, platform):
         Conversation.clear_context(user_id, platform)
-        
+
+
     @staticmethod
-    def detectar_sintoma_spacy(texto_usuario, known_symptoms):
-        doc = nlp(texto_usuario.lower())
+    def detectar_sintoma_spacy(texto_usuario):
+        """Detecta sintomas com base no campo 'indicacao' dos produtos do banco"""
+        doc = nlp(unidecode(texto_usuario.lower()))
         texto_processado = " ".join([token.lemma_ for token in doc])
 
         sintomas_detectados = set()
+        todos_produtos = Product.get_all()
 
-        for sintoma, info in known_symptoms.items():
-            if sintoma in texto_processado:
-                sintomas_detectados.add(sintoma)
-                for sinonimo in info.get("sinonimos", []):
-                    if sinonimo in texto_processado:
-                        sintomas_detectados.add(sintoma)
+        for produto in todos_produtos:
+            for sintoma in produto.get("indicacao", []):
+                sintoma_normalizado = unidecode(sintoma.lower())
+                if sintoma_normalizado in texto_processado:
+                    sintomas_detectados.add(sintoma)
 
         return list(sintomas_detectados) if sintomas_detectados else None
+
 
     @staticmethod
     def process_in_context(user_id, platform, message_text, nlp_result):
         current_context = ContextManager.get_current_context(user_id, platform)
         context_type = current_context.get('type', ContextManager.CONTEXT_TYPES['NONE'])
         context_data = current_context.get('data', {})
-        
+
         if context_type == ContextManager.CONTEXT_TYPES['NONE']:
-            return None, None, None
-        
+            return None, context_type, context_data
+
         if context_type == ContextManager.CONTEXT_TYPES['ASKING_MEDICINE_INFO']:
             medicine_name = context_data.get('medicine_name')
-            if nlp_result['intent'] in ['despedida', 'ajuda']:
-                return None, ContextManager.CONTEXT_TYPES['NONE'], None
-
             product = Product.find_by_name(medicine_name)
 
             if product:
@@ -83,22 +89,9 @@ class ContextManager:
                     "Posso ajudar com mais alguma informação sobre este medicamento?"
                 )
             else:
-                response = f"Desculpe, não encontrei informações sobre '{medicine_name}'. Você pode verificar o nome ou tentar outro medicamento?"
-            
+                response = f"Desculpe, não encontrei informações sobre '{medicine_name}'. Verifique o nome ou tente outro medicamento."
             return response, context_type, context_data
-        
-        elif context_type == ContextManager.CONTEXT_TYPES['CHECKING_STOCK']:
-            product_name = context_data.get('product_name')
-            if nlp_result['intent'] in ['despedida', 'ajuda']:
-                ContextManager.clear_context(user_id, platform)
-                return None, ContextManager.CONTEXT_TYPES['NONE'], None
-            
-            response = (
-                f"Verificamos e temos {product_name} disponível em estoque!\n"
-                "Deseja saber o preço ou mais informações sobre este produto?"
-            )
-            return response, context_type, context_data
-                        
+
         elif context_type == ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM']:
 
             def check_symptom_severity(symptom_text):
@@ -122,13 +115,12 @@ class ContextManager:
                     "SEUS SINTOMAS INDICAM UMA CONDIÇÃO POSSIVELMENTE GRAVE.\n\n"
                     "RECOMENDAMOS PROCURAR O ATENDIMENTO MÉDICO MAIS PRÓXIMO DA SUA REGIÃO.\n\n"
                     "Quer conversar com um dos nossos farmacêuticos? \n\n ✅ Digite SIM para ser redirecionado\n\n "
-                    "❌ DIgitie NÃO para continuar com a ajuda automatizada.\n\n"
+                    "❌ Digite NÃO para continuar com a ajuda automatizada.\n\n"
                     "Estamos aqui para atendê-lo(a) da melhor maneira."
                 )
                 return response, ContextManager.CONTEXT_TYPES['HUMAN'], None
 
-            matched_symptom = ContextManager.detectar_sintoma_spacy(symptom, known_symptoms)
-
+            matched_symptom = ContextManager.detectar_sintoma_spacy(symptom)
             if matched_symptom:
                 response = ""
                 for sintoma in matched_symptom:
@@ -136,40 +128,31 @@ class ContextManager:
 
                     if not medicamentos:
                         response += f"⚠️ Nenhum medicamento sugerido para o sintoma: *{sintoma}*\n\n"
-                        continue
+                        continue  # Pula para o próximo sintoma
 
-                    response += f" Para o sintoma {sintoma}, posso sugerir:\n\n"
-
-                    for i, med_name in enumerate(medicamentos, 1):
+                    response += f"🔸 Para o sintoma {sintoma.upper()}, posso sugerir:\n\n"
+                    for med_name in medicamentos:
                         product = Product.get_product_by_name(med_name)
                         if product:
                             description = product.get('description', 'Sem descrição disponível.')
-                            manufacturer = product.get('manufacturer', 'Desconhecido')
-                            price = product.get('price', 'N/A')
-                            administration = product.get('administration_route', 'Via não informada')
-                        else:
-                            description = 'Medicamento não encontrado no banco de dados.'
-                            manufacturer = 'Desconhecido'
-                            price = 'N/A'
-                            administration = 'Via não informada'
-
-                        response += (
-                            f"\n"
-                            f"🔹 {i}. {med_name.upper()} - {description}\n\n"
-                        )
-
+                            principio_ativo = product.get('principio_ativo', 'Não informado')
+                            link_bula = product.get('link_bula', 'Não encontrado')
+                            response += (
+                                f"🔹 {med_name.upper()} - {principio_ativo}\n\n"
+                                f"🔹 {description}\n\n"
+                                f"🔹 +++BULA+++\n {link_bula}\n\n"
+                                f"======\n\n"
+                            )
                     response += "────────────\n\n"
 
                 response += (
                     "⚠️ ATENÇÃO ⚠️\n\n"
                     "A sugestão de medicação é para fins de agilizar seu atendimento\n\n"
                     "NÃO INDICAMOS A AUTOMEDICAÇÃO\n\n"
-                    "Digite 1️⃣ para ser falar com um de nossos atendentes\n\n"
-                    "Digite 0️⃣ para retornar ao menu anterior\n"
+                    "1️⃣ para ser falar com um de nossos atendentes\n\n"
+                    "0️⃣ para retornar ao menu anterior\n"
                 )
-
-                return response, ContextManager.CONTEXT_TYPES['NONE'], None
-
+                return response, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], context_data
 
             else:
                 response = (
@@ -177,11 +160,10 @@ class ContextManager:
                     "Exemplos: *dor de cabeça*, *febre*, *tosse*, *náusea*..."
                 )
                 return response, ContextManager.CONTEXT_TYPES['WAITING_SYMPTOM'], context_data
-            
-        elif context_type == ContextManager.CONTEXT_TYPES['FAQ']:
-            from models import FAQ  # coloque no topo do arquivo se preferir
-            numero = message_text.strip()
 
+        elif context_type == ContextManager.CONTEXT_TYPES['FAQ']:
+            from models import FAQ
+            numero = message_text.strip()
             if numero == "0":
                 return (
                     "Você voltou ao menu principal. Como posso te ajudar hoje?",
@@ -189,8 +171,7 @@ class ContextManager:
                     {}
                 )
 
-            all_faqs = FAQ.get_all()  # Retorna todas as FAQs em ordem
-
+            all_faqs = FAQ.get_all()
             try:
                 idx = int(numero) - 1
                 if 0 <= idx < len(all_faqs):
@@ -213,7 +194,27 @@ class ContextManager:
                     context_data
                 )
 
-        # Redirecionamentos gerais, talvez colocar fora do if context_type
+        elif context_type == ContextManager.CONTEXT_TYPES['INFO_LOJA_SUBMENU']:
+            opcao = message_text.strip()
+            if opcao == '1':
+                return (
+                    "Você voltou ao menu principal. Como posso te ajudar hoje?",
+                    ContextManager.CONTEXT_TYPES['MAIN_MENU'],
+                    {}
+                )
+            elif opcao == '2':
+                return (
+                    f"🔥 Fique por dentro das PROMOÇÕES da semana na nossa página!\n\n{instagram_link_promos}\n",
+                    context_type,
+                    context_data
+                )
+            else:
+                return (
+                    "Por favor, digite 1️⃣ para voltar ao Menu principal ou 2️⃣ para ver PROMOÇÕES.",
+                    context_type,
+                    context_data
+                )
+
         if message_text.strip().lower() == "sim":
             whatsapp_link = "https://wa.me/5527995239355?text=Olá,%20preciso%20de%20ajuda%20com%20meus%20sintomas"
             response = (
@@ -239,4 +240,4 @@ class ContextManager:
             response = "Você voltou ao menu principal. Como posso te ajudar hoje?"
             return response, ContextManager.CONTEXT_TYPES['MAIN_MENU'], None
 
-        return None, None, None
+        return None, context_type, context_data
